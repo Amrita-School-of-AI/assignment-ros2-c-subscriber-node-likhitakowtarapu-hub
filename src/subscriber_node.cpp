@@ -16,9 +16,12 @@ public:
   }
 
 private:
-  void topic_callback(const std_msgs::msg::String::SharedPtr msg) const
+  void topic_callback(const std_msgs::msg::String::SharedPtr msg)
   {
     RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
+
+    // 🔑 IMPORTANT: shutdown after receiving ONE message
+    rclcpp::shutdown();
   }
 
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
@@ -28,6 +31,5 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<SubscriberNode>());
-  rclcpp::shutdown();
   return 0;
 }
